@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INLIGHT</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+  >
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: #252525;
+      color: #f2f2f2;
+      font-family:
+        "BPG Nino Mtavruli Regular",
+        "BPG Nino Mtavruli",
+        Arial,
+        sans-serif;
+    }
+
+    img,
+    video {
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* HERO */
+
+    .hero {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1280 / 760;
+      min-height: 540px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+      object-position: center;
+
+      background: #111;
+    }
+
+    .hero-dark,
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-dark {
+      z-index: 2;
+      pointer-events: none;
+
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, .52) 0%,
+        rgba(0, 0, 0, .24) 40%,
+        rgba(0, 0, 0, .58) 100%
+      );
+    }
+
+    .hero-vignette {
+      z-index: 3;
+      pointer-events: none;
+
+      background: radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        rgba(0, 0, 0, .22) 100%
+      );
+    }
+
+    /* LOGO */
+
+    .logo {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+      z-index: 50;
+
+      width: clamp(82px, 8.5vw, 112px);
+      height: auto;
+
+      transform: translateX(-50%);
+    }
+
+    /* SERVICES */
+
+    .services {
+      position: absolute;
+      top: 51%;
+      left: 50%;
+      z-index: 20;
+
+      width: min(52vw, 570px);
+      height: min(28vw, 305px);
+
+      transform: translate(-50%, -50%);
+    }
+
+    .triangle {
+      position: absolute;
+      top: 50%;
+      width: 34%;
+      aspect-ratio: 1 / .866;
+
+      overflow: visible;
+
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+
+      transition:
+        transform .25s ease,
+        filter .25s ease;
+    }
+
+    .triangle:hover {
+      filter:
+        brightness(.78)
+        drop-shadow(0 12px 22px rgba(0, 0, 0, .35));
+
+      transform: translate(-50%, -50%) scale(1.035);
+    }
+
+    .triangle:active {
+      transform: translate(-50%, -50%) scale(.98);
+    }
+
+    .triangle-left {
+      left: 25.5%;
+    }
+
+    .triangle-center {
+      left: 50%;
+      z-index: 3;
+      width: 43%;
+
+      transform: translate(-50%, -50%) rotate(180deg);
+    }
+
+    .triangle-center:hover {
+      transform:
+        translate(-50%, -50%)
+        rotate(180deg)
+        scale(1.035);
+    }
+
+    .triangle-center:active {
+      transform:
+        translate(-50%, -50%)
+        rotate(180deg)
+        scale(.98);
+    }
+
+    .triangle-right {
+      left: 74.5%;
+    }
+
+    .triangle-svg {
+      position: absolute;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      overflow: visible;
+    }
+
+    .triangle-glass {
+      fill: url(#glassGradient);
+      stroke: rgba(255, 255, 255, .19);
+      stroke-width: 1.25;
+
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+
+      filter: drop-shadow(0 18px 35px rgba(0, 0, 0, .2));
+
+      transition: fill .25s ease;
+    }
+
+    .triangle:hover .triangle-glass {
+      fill: rgba(255, 255, 255, .055);
+    }
+
+    .triangle-highlight {
+      fill: none;
+      stroke: rgba(255, 255, 255, .085);
+      stroke-width: 1;
+
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    /* TRIANGLE TEXT */
+
+    .triangle-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 5;
+
+      width: 72%;
+
+      text-align: center;
+      pointer-events: none;
+
+      transform: translate(-50%, -50%);
+    }
+
+    .triangle-left .triangle-content,
+    .triangle-right .triangle-content {
+      top: 66%;
+      transform: translate(-50%, -50%);
+    }
+
+    .triangle-center .triangle-content {
+      top: 66%;
+      transform: translate(-50%, -50%) rotate(180deg);
+    }
+
+    .service-text {
+      color: rgba(245, 245, 245, .88);
+      font-size: clamp(8px, 2.45cqw, 14px);
+      line-height: 1.45;
+      font-weight: 400;
+
+      text-shadow: 0 2px 10px rgba(0, 0, 0, .38);
+    }
+
+    .triangle-center .service-text {
+      font-size: clamp(9px, 2.75cqw, 16px);
+    }
+
+    /* BUTTONS */
+
+    .phone-button,
+    .contact-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 9px;
+
+      border-radius: 30px;
+      white-space: nowrap;
+
+      transition:
+        background .22s ease,
+        transform .22s ease,
+        filter .22s ease,
+        box-shadow .22s ease;
+
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .phone-icon,
+    .contact-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      flex-shrink: 0;
+
+      width: 27px;
+      height: 27px;
+
+      border-radius: 50%;
+
+      background: #f2f2f2;
+      color: #e77518;
+
+      font-size: 12px;
+    }
+
+    /* PHONE */
+
+    .phone-button {
+      position: absolute;
+      left: 50%;
+      bottom: 8.5%;
+      z-index: 60;
+
+      min-width: 134px;
+      height: 36px;
+
+      padding: 0 16px 0 8px;
+
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: .5px;
+
+      background: linear-gradient(
+        135deg,
+        rgba(231, 117, 24, .88),
+        rgba(231, 117, 24, .52)
+      );
+
+      border: 1px solid rgba(255, 255, 255, .12);
+
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .16),
+        0 8px 25px rgba(0, 0, 0, .28);
+
+      transform: translateX(-50%);
+    }
+
+    .phone-button:hover {
+      background: linear-gradient(
+        135deg,
+        rgba(231, 117, 24, .98),
+        rgba(205, 91, 12, .66)
+      );
+
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    /* SOCIALS */
+
+    .socials {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      z-index: 70;
+
+      display: flex;
+      align-items: center;
+
+      gap: 20px;
+      height: 34px;
+
+      padding: 0 12px 0 22px;
+
+      border-radius: 0 18px 0 0;
+
+      background: rgba(37, 37, 37, .86);
+    }
+
+    .social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 25px;
+      height: 25px;
+
+      border-radius: 50%;
+
+      background: #e77518;
+      color: #fff;
+
+      font-size: 13px;
+
+      transition: .2s ease;
+    }
+
+    .social:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.12);
+    }
+
+    /* WHY */
+
+    .why {
+      width: 100%;
+
+      padding:
+        clamp(60px, 6.8vw, 88px)
+        clamp(28px, 2.3vw, 30px)
+        clamp(90px, 8vw, 120px);
+
+      background: #252525;
+    }
+
+    .why-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 30px;
+
+      margin-bottom: clamp(55px, 5vw, 70px);
+    }
+
+    .why-title {
+      color: #f2f2f2;
+
+      font-size: clamp(22px, 2.4vw, 30px);
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 1px;
+    }
+
+    /* CONTACT */
+
+    .contact-button {
+      flex-shrink: 0;
+
+      min-width: 166px;
+      height: 36px;
+
+      padding: 0 17px 0 7px;
+
+      color: #f2f2f2;
+      font-size: 12px;
+      letter-spacing: .5px;
+
+      background: linear-gradient(
+        135deg,
+        rgba(231, 117, 24, .72),
+        rgba(231, 117, 24, .28)
+      );
+
+      border: none;
+
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .14),
+        inset 0 -1px 0 rgba(0, 0, 0, .08),
+        0 8px 25px rgba(0, 0, 0, .18);
+    }
+
+    .contact-button:hover {
+      transform: translateY(-2px);
+    }
+
+    /* STATISTICS */
+
+    .statistics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+
+      gap: clamp(25px, 5.2vw, 67px);
+    }
+
+    .stat {
+      position: relative;
+
+      min-height: 165px;
+
+      padding: 38px 42px;
+
+      overflow: hidden;
+
+      border-radius: 17px;
+
+      background: linear-gradient(145deg, #202020, #191919);
+
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .14);
+
+      transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-6px);
+
+      box-shadow: 0 18px 38px rgba(0, 0, 0, .23);
+    }
+
+    .stat::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      border: 1px solid rgba(255, 255, 255, .025);
+      border-radius: inherit;
+
+      pointer-events: none;
+    }
+
+    .stat-value {
+      margin-bottom: 14px;
+
+      color: #e77518;
+
+      font-size: clamp(25px, 2.2vw, 30px);
+      line-height: 1;
+
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    .stat-label {
+      color: rgba(242, 242, 242, .52);
+
+      font-size: clamp(13px, 1.25vw, 17px);
+      line-height: 1.45;
+      letter-spacing: .3px;
+    }
+
+    /* TABLET */
+
+    @media (max-width: 900px) {
+      .hero {
+        min-height: 500px;
+        aspect-ratio: 4 / 3;
+      }
+
+      .logo {
+        top: 7%;
+        width: 94px;
+      }
+
+      .services {
+        top: 50%;
+        width: 76vw;
+        height: 34vw;
+        max-width: 700px;
+        max-height: 300px;
+      }
+
+      .phone-button {
+        bottom: 7%;
+        min-width: 130px;
+        height: 35px;
+      }
+
+      .statistics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 25px;
+      }
+
+      .stat {
+        min-height: 150px;
+        padding: 30px;
+      }
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 510px;
+        aspect-ratio: .92 / 1;
+      }
+
+      .logo {
+        top: 6%;
+        width: 88px;
+      }
+
+      .services {
+        top: 48%;
+        width: 88vw;
+        height: 38vw;
+      }
+
+      .service-text {
+        font-size: clamp(7px, 2.45cqw, 8px);
+      }
+
+      .triangle-center .service-text {
+        font-size: clamp(7.5px, 2.75cqw, 9px);
+      }
+
+      .phone-button {
+        bottom: 6%;
+        min-width: 130px;
+        height: 34px;
+        font-size: 10.5px;
+      }
+
+      .socials {
+        gap: 14px;
+        padding: 0 12px;
+      }
+
+      .why {
+        padding: 55px 20px 70px;
+      }
+
+      .why-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        margin-bottom: 40px;
+      }
+
+      .why-title {
+        font-size: 21px;
+      }
+
+      .contact-button {
+        min-width: 160px;
+      }
+
+      .statistics {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .stat {
+        min-height: 145px;
+        padding: 32px 34px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .hero {
+        min-height: 480px;
+      }
+
+      .logo {
+        width: 82px;
+      }
+
+      .services {
+        width: 90vw;
+      }
+
+      .phone-button {
+        min-width: 126px;
+        height: 33px;
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="hero">
+
+    <!-- VIDEO -->
+    <video
+      id="heroVideo"
+      class="hero-video"
+      src="./ვიდეო რენდერი.mov"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    ></video>
+
+    <div class="hero-dark"></div>
+    <div class="hero-vignette"></div>
+
+    <!-- LOGO -->
+    <img
+      class="logo"
+      src="./logo.png"
+      alt="INLIGHT"
+    >
+
+    <!-- SERVICES -->
+    <div class="services">
+
+      <a
+        href="საინჟინრო.html"
+        class="triangle triangle-left"
+        aria-label="საინჟინრო კომუნიკაციები"
+      >
+        <svg
+          class="triangle-svg"
+          viewBox="0 0 400 346.41"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient
+              id="glassGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stop-color="rgba(255,255,255,.16)"/>
+              <stop offset="50%" stop-color="rgba(255,255,255,.075)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,.025)"/>
+            </linearGradient>
+          </defs>
+
+          <path
+            class="triangle-glass"
+            d="M181 52C185 44 191 38 200 37C209 38 215 44 219 52L382 302C389 313 389 322 384 330C379 339 369 344 357 344H43C31 344 21 339 16 330C11 322 11 313 18 302L181 52Z"
+          />
+
+          <path
+            class="triangle-highlight"
+            d="M185 55C189 47 194 43 200 42C206 43 211 47 215 55L377 305C382 314 382 320 378 327C374 334 366 338 356 338H44C34 338 26 334 22 327C18 320 18 314 23 305L185 55Z"
+          />
+        </svg>
+
+        <div class="triangle-content">
+          <div class="service-text">
+            საინჟინრო<br>
+            კომუნიკაციები
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="არქიტექტურა.html"
+        class="triangle triangle-center"
+        aria-label="არქიტექტურული პროექტირება"
+      >
+        <svg
+          class="triangle-svg"
+          viewBox="0 0 400 346.41"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            class="triangle-glass"
+            d="M181 52C185 44 191 38 200 37C209 38 215 44 219 52L382 302C389 313 389 322 384 330C379 339 369 344 357 344H43C31 344 21 339 16 330C11 322 11 313 18 302L181 52Z"
+          />
+
+          <path
+            class="triangle-highlight"
+            d="M185 55C189 47 194 43 200 42C206 43 211 47 215 55L377 305C382 314 382 320 378 327C374 334 366 338 356 338H44C34 338 26 334 22 327C18 320 18 314 23 305L185 55Z"
+          />
+        </svg>
+
+        <div class="triangle-content">
+          <div class="service-text">
+            არქიტექტურული<br>
+            პროექტირება
+          </div>
+        </div>
+      </a>
+
+      <a
+        href="ინტერიერი.html"
+        class="triangle triangle-right"
+        aria-label="ინტერიერის დიზაინი"
+      >
+        <svg
+          class="triangle-svg"
+          viewBox="0 0 400 346.41"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            class="triangle-glass"
+            d="M181 52C185 44 191 38 200 37C209 38 215 44 219 52L382 302C389 313 389 322 384 330C379 339 369 344 357 344H43C31 344 21 339 16 330C11 322 11 313 18 302L181 52Z"
+          />
+
+          <path
+            class="triangle-highlight"
+            d="M185 55C189 47 194 43 200 42C206 43 211 47 215 55L377 305C382 314 382 320 378 327C374 334 366 338 356 338H44C34 338 26 334 22 327C18 320 18 314 23 305L185 55Z"
+          />
+        </svg>
+
+        <div class="triangle-content">
+          <div class="service-text">
+            ინტერიერის<br>
+            დიზაინი
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- PHONE -->
+    <a
+      href="https://wa.me/995514045050"
+      class="phone-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="phone-icon">
+        <i class="fa-solid fa-phone"></i>
+      </span>
+
+      <span>514 04 05 50</span>
+    </a>
+
+    <!-- SOCIALS -->
+    <div class="socials">
+
+      <a
+        href="mailto:inlightarchitects@gmail.com"
+        class="social"
+        aria-label="Email"
+      >
+        <i class="fa-solid fa-envelope"></i>
+      </a>
+
+      <a
+        href="https://www.instagram.com/inlight.architects"
+        class="social"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram"
+      >
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+
+      <a
+        href="https://www.facebook.com/share/1JF3koPuUC/?mibextid=wwXIfr"
+        class="social"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Facebook"
+      >
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+
+    </div>
+
+  </section>
+
+  <!-- WHY -->
+  <section class="why">
+
+    <div class="why-header">
+
+      <h1 class="why-title">
+        რატომ უნდა შეაჩერო არჩევანი ინლაითზე?
+      </h1>
+
+      <a
+        href="https://wa.me/995514045050"
+        class="contact-button"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="contact-icon">
+          <i class="fa-solid fa-phone"></i>
+        </span>
+
+        <span>დაგვიკავშირდი</span>
+      </a>
+
+    </div>
+
+    <div class="statistics">
+
+      <article class="stat">
+        <div class="stat-value">100 +</div>
+        <div class="stat-label">
+          ბედნიერი<br>
+          მომხმარებელი
+        </div>
+      </article>
+
+      <article class="stat">
+        <div class="stat-value">70 +</div>
+        <div class="stat-label">
+          პარტნიორი<br>
+          კომპანია
+        </div>
+      </article>
+
+      <article class="stat">
+        <div class="stat-value">30 +</div>
+        <div class="stat-label">
+          პარტნიორი<br>
+          კერძო პირი
+        </div>
+      </article>
+
+      <article class="stat">
+        <div class="stat-value">15 +</div>
+        <div class="stat-label">
+          წლიანი<br>
+          გამოცდილება
+        </div>
+      </article>
+
+    </div>
+
+  </section>
+
+  <script>
+    const heroVideo = document.getElementById("heroVideo");
+
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+
+    heroVideo.addEventListener("loadeddata", function () {
+      heroVideo.play().catch(() => {});
+    });
+
+    window.addEventListener("load", function () {
+      heroVideo.play().catch(() => {});
+    });
+  </script>
+
+</body>
+</html>
